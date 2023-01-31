@@ -23,7 +23,7 @@ git clone https://github.com/unikernelLinux/ukl
 cd ukl
 git submodule update --init
 autoreconf -i
-./configure --with-program=hello
+./configure --with-program=new_lebench
 make -j`nproc`
 ```
 
@@ -40,7 +40,7 @@ instead.  Note this runs qemu with `sudo`:
 make boot-priv
 ```
 
-`hello` is a simple hello world example.  You can try one of the other
+`new_lebench` is a simple new_lebench world example.  You can try one of the other
 programs (see subdirectories in the source) by adjusting
 `./configure --with-program=...`
 
@@ -73,9 +73,9 @@ source tree, you can do this by creating separate build directories,
 eg:
 
 ```
-mkdir build-hello
-pushd build-hello
-../configure --with-program=hello
+mkdir build-new_lebench
+pushd build-new_lebench
+../configure --with-program=new_lebench
 make -j`nproc`
 popd
 
@@ -88,8 +88,8 @@ popd
 
 ## Building your own program
 
-We would strongly recommend looking at the example hello world program
-in the `hello/` subdirectory.
+We would strongly recommend looking at the example new_lebench world program
+in the `new_lebench/` subdirectory.
 
 1. You need to build it (not link) with two flags: `-mno-red-zone -mcmodel=kernel`
 2. Then you need to do a partial link with the required libraries, glibc, libgcc etc.
