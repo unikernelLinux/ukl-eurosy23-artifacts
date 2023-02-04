@@ -16,6 +16,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+.PHONY: new_lebench.ukl stamp-new_lebench-dir
+
 CLEANFILES = \
 	*~ *.o *.a \
 	stamp-new_lebench-dir
@@ -25,6 +27,11 @@ clean-local:
 
 distclean-local:
 	rm -rf new_lebench
+
+clean: clean-local distclean-local
+	rm -f *.o
+	rm -f UKL.a
+	rm -f *.ukl
 
 noinst_DATA = UKL.a
 
@@ -40,23 +47,22 @@ GCC_LIBS    = $(abs_top_builddir)/libgcc.a $(abs_top_builddir)/libgcc_eh.a
 
 AM_CFLAGS   = -ggdb -mno-red-zone -mcmodel=kernel -static
 
-UKL.a: new_lebench.o undefined_sys_hack.o
+UKL.a: new_lebench.ukl undefined_sys_hack.o
 	rm -f $@
 	ar cr UKL.a $^
 	objcopy --prefix-symbols=ukl_ $@
 	objcopy --redefine-syms=$(top_srcdir)/redef_sym_names $@
 
-new_lebench.o: stamp-new_lebench-dir
+new_lebench.ukl: stamp-new_lebench-dir
 	rm -f $@
 	$(MAKE) -C new_lebench clean
-	$(MAKE) -C new_lebench all CFLAGS="-O2 $(AM_CFLAGS)"
-	rm new_lebench/src/new_lebench
+	$(MAKE) -C new_lebench all CFLAGS="-O2 $(AM_CFLAGS) $(NBYP_FLAG) $(CFLAGS)"
 	ld -r -o $@ -allow-multiple-definition \
 	    $(CRT_STARTS) \
-	    new_lebench/src/*.o \
+	    new_lebench/new_lebench.o \
 	    --start-group \
 	    --whole-archive \
-	    $(MATH_LIB) $(RT_LIB) $(PTHREAD_LIB) $(C_LIB) \
+	    $(PTHREAD_LIB) $(C_LIB) \
 	    --no-whole-archive \
 	    $(GCC_LIBS) \
 	    --end-group \
@@ -66,7 +72,7 @@ new_lebench.o: stamp-new_lebench-dir
 stamp-new_lebench-dir:
 	rm -f $@
 	if ! test -d new_lebench; then \
-	    git clone https://github.com/unikernelLinux/new_lebench.git
+	    git clone -b eurosys23-ae https://github.com/unikernelLinux/new_lebench.git; \
 	fi
 	touch $@
 

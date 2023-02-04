@@ -56,7 +56,7 @@ DIST_SUBDIRS = memcached redis fio new_lebench
 # C runtime objects.
 CRT_OBJS = crtbeginT.o crtend.o libgcc.a libgcc_eh.a
 
-noinst_DATA = $(CRT_OBJS) libstdc++.a
+noinst_DATA = $(CRT_OBJS) #libstdc++.a
 
 $(CRT_OBJS): stamp-libgcc-build
 stamp-libgcc-build: stamp-libgcc-configure
@@ -116,13 +116,12 @@ LIBC_OBJS = libc.a libpthread.a libm.a librt.a libcrypt.a crt1.o crti.o crtn.o
 noinst_DATA += $(LIBC_OBJS)
 
 GLIBC_CFLAGS = -g -O2 -fthread-jumps -mcmodel=kernel -mno-red-zone
-if DEFAULT_PIE
-GLIBC_CFLAGS += -fno-PIC
-endif
 if ENABLE_BYPASS
 GLIBC_CFLAGS += -DUKL_BP
+AM_CFLAGS = -DUKL_BP
 else
 GLIBC_CFLAGS += -UUKL_BP
+AM_CFLAGS = -UUKL_BP
 endif
 
 libc.a: stamp-glibc-configure
@@ -218,7 +217,7 @@ UKL.a: $(PROGRAM)/UKL.a
 	cp $< $@
 
 $(PROGRAM)/UKL.a: $(CRT_OBJS) $(LIBC_OBJS)
-	cd $(PROGRAM) && $(MAKE) UKL.a
+	cd $(PROGRAM) && $(MAKE) UKL.a CFLAGS="$(AM_CFLAGS)"
 
 #----------------------------------------------------------------------
 # Per-program configuration and data files (if required).
@@ -278,6 +277,18 @@ supermin.d/init.tar.gz: init supermin.d/packages
 # Non-privileged:
 boot:
 	qemu-system-x86_64 \
+	    -cpu host -accel kvm -m 12G \
+	    -smp cpus=4 \
+	    -kernel vmlinuz \
+	    -initrd ./initrd/initrd \
+	    -hda ./initrd/root \
+	    -nodefaults -nographic -serial stdio \
+	    -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.122.128:::255.255.255.0::eth0:none" \
+	    -net user
+
+boot-db:
+	qemu-system-x86_64 \
+	    -s -S \
 	    -cpu host -accel kvm -m 4G \
 	    -kernel vmlinuz \
 	    -initrd ./initrd/initrd \
@@ -290,6 +301,17 @@ boot:
 # network connections).
 boot-priv:
 	sudo qemu-system-x86_64 \
+	    -cpu host -accel kvm -m 4G \
+	    -kernel vmlinuz \
+	    -initrd ./initrd/initrd \
+	    -hda ./initrd/root \
+	    -nodefaults -nographic -serial stdio \
+	    -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.122.128:::255.255.255.0::eth0:none" \
+	    -net nic -net bridge,br=virbr0
+
+boot-priv-db:
+	sudo qemu-system-x86_64 \
+	    -s -S \
 	    -cpu host -accel kvm -m 4G \
 	    -kernel vmlinuz \
 	    -initrd ./initrd/initrd \
