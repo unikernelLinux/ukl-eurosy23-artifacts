@@ -72,7 +72,7 @@ new_lebench.ukl: stamp-new_lebench-dir
 stamp-new_lebench-dir:
 	rm -f $@
 	if ! test -d new_lebench; then \
-	    git clone -b eurosys23-ae https://github.com/unikernelLinux/new_lebench.git; \
+	    git clone -b stack_test https://github.com/unikernelLinux/new_lebench.git; \
 	fi
 	touch $@
 
