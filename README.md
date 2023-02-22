@@ -10,7 +10,7 @@ available for use by the unikernel.
 ## Requirements
 
 * autoconf & automake
-* GCC or Clang
+* GCC or Clang including C++ support
 * GNU make
 * GNU sed
 * supermin (https://github.com/libguestfs/supermin)
