@@ -258,12 +258,14 @@ noinst_DATA += initrd/root
 initrd/root: supermin.d/packages \
 	     supermin.d/init.tar.gz \
 	     supermin.d/data.tar.gz
+	export SUPERMIN_KERNEL=$(srcdir)/vmlinuz
 	$(SUPERMIN) --build \
 	    --size 8G --if-newer --format ext2 \
 	    supermin.d -o initrd
 	touch $@
 
-supermin.d/packages: Makefile
+supermin.d/packages: Makefile vmlinuz
+	export SUPERMIN_KERNEL=$(srcdir)/vmlinuz
 	mkdir -p supermin.d
 	$(SUPERMIN) --prepare $(INITRD_PACKAGES) -o supermin.d
 
