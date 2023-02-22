@@ -23,6 +23,8 @@ available for use by the unikernel.
 * flex
 * elfutils-libelf-devel
 * openssl-devel
+* wget
+* bzip2
 
 ## Artifact specific instructions (see the rest of the steps below)
 
