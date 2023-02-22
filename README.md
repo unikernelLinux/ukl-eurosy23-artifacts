@@ -26,6 +26,10 @@ available for use by the unikernel.
 * wget
 * bzip2
 
+On Fedora the following line should bring in what you need:
+
+`dnf install autoconf automake gcc g++ make sed supermin qemu git make ncurses-devel bc bison flex elfutils-libelf-devel openssl-devel wget bzip2`
+
 ## Artifact specific instructions (see the rest of the steps below)
 
 ### Building UKL Images
