@@ -47,6 +47,25 @@ To reproduce Figures 1 and 2 in the paper, you will need to create three images:
 3. To create the UKL_BYP image, follow the instructions in the README file, but run the configure script with the option `--enable-bypass`.
 4. All of the images need to be configured with new_lebench program, i.e., `./configure --with-program=new_lebench`
 
+So to build all the kernels needed:
+```
+./configure --with-program=new_lebench
+make -j`nproc`
+cp vmlinuz vmlinuz.ukl
+make clean
+./configure --with-program=new_lebench --enable-bypass
+make -j`nproc`
+cp vmlinuz vmlinuz.ukl_byp
+cp saveconfig linux/.config
+cd linux
+make clean
+make -j`nproc`
+cp arch/x86/boot/bzImage ../vmlinuz.linux
+cd new_lebench/new_lebench
+gcc -o new_lebench -UUSE_VMALLOC -UBYPASS -UUSE_MALLOC -DREF_TEST -USEND_TEST -URECV_TEST -DTHREAD_TEST -UFORK_TEST -DWRITE_TEST -DREAD_TEST -DPF_TEST -DST_PF_TEST -UDEBUG new_lebench.c
+cp new_lebench ../../
+```
+
 For figures 1, 2, and 4 you will need to boot a machine with the produced kernel and init ramdisk built with `./create-initrd.sh`. The results are dropped in the `/` directory and are csv files. The ramdisk includes an ssh server with root user password of `root` so you can retrieve the results. These CSV files will be fed to the approrpiate graphing scripts.
 
 To reproduce Figure 4 in the paper, you will need three additional images: UKL_PF_DF, UKL_PF_SS, and UKL_RET_PF_DF.
