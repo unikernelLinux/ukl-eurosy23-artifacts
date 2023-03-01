@@ -32,4 +32,5 @@ Makefile.in
 /vmlinuz
 /new_lebench/stamp-new_lebench-dir
 /new_lebench/undefined_sys_hack.c
-
+.initrd
+ukl-initrd.cpio.xz

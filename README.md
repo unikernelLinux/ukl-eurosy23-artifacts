@@ -34,25 +34,35 @@ On Fedora the following line should bring in what you need:
 
 ### Building UKL Images
 
+Note: reproducing the figures will require that you be able to boot a physical machine from the produced kernel and init ramdisk. In our lab we use a TFTP boot setup, but installing the kernel on a machine and having grub boot it works as well.
+
+Each of these kernels should be started with the following command line (with ${IP} replaced with your chosen IP address:
+
+`console=ttyS0 net.ifnames=0 biosdevname=0 nowatchdog nopti nosmap nosmep ip=${IP}:::255.255.255.0::eth0:none nokaslr selinux=0 root=/dev/ram0 init=/init`
+
 To reproduce Figures 1 and 2 in the paper, you will need to create three images: Linux, UKL, and UKL_BYP.
 
 1. To create the Linux image, use the saveconfig file and build Linux from the submodule provided in the ukl-eurosy23-artifacts repository.
 2. To create the UKL image, follow the instructions in the README file.
-3. To create the UKL_BYP image, follow the instructions in the README file, but run the configure script with the option --enable-bypass.
-4. All of the images need to be configured with new_lebench program, i.e., ./configure --with-program=new_lebench
+3. To create the UKL_BYP image, follow the instructions in the README file, but run the configure script with the option `--enable-bypass`.
+4. All of the images need to be configured with new_lebench program, i.e., `./configure --with-program=new_lebench`
+
+For figures 1, 2, and 4 you will need to boot a machine with the produced kernel and init ramdisk built with `./create-initrd.sh`. The results are dropped in the `/` directory and are csv files. The ramdisk includes an ssh server with root user password of `root` so you can retrieve the results. These CSV files will be fed to the approrpiate graphing scripts.
 
 To reproduce Figure 4 in the paper, you will need three additional images: UKL_PF_DF, UKL_PF_SS, and UKL_RET_PF_DF.
 
 1. To create the UKL_PF_DF image, configure UKL without any special flags.
-2. To create the UKL_PF_SS image, configure UKL with the --enable-use-ist-pf option.
-3. To create the UKL_RET_PF_DF image, configure UKL with the --enable-use-ret option.
-4. This also needs to be configured with new_lebench program, i.e., ./configure --with-program=new_lebench
+2. To create the UKL_PF_SS image, configure UKL with the `--enable-use-ist-pf` option.
+3. To create the UKL_RET_PF_DF image, configure UKL with the `--enable-use-ret` option.
+4. This also needs to be configured with new_lebench program, i.e., `./configure --with-program=new_lebench`
 
 To reproduce Figure 5 in the paper, you will also need to create the UKL_RET_BYP (shortcut) image.
-1. To create the UKL_RET_BYP (shortcut) image, use the ukl-main-5.14-sc branch of the Linux submodule in the ukl-eurosy23-artifacts repository, and configure UKL with the --enable-bypass and --enable-use-ret option.
-2. All of the images need to be configured with redis program, i.e., ./configure --with-program=redis
+1. To create the UKL_RET_BYP (shortcut) image, use the `ukl-main-5.14-sc` branch of the Linux submodule in the ukl-eurosy23-artifacts repository, the `redis-ukl-sc` branch under `redis/redis` in the ukl-eurosy23-artifacts repository, and configure UKL with the `--enable-bypass` and `--enable-use-ret` option.
+2. All of the images need to be configured with redis program, i.e., `./configure --with-program=redis`
 
-To reproduce Figure 6 in the paper, the configurations will be as above but the program to be configured with will be memcached
+You will need to use the kernel produced and the init ramdisk that can be built with `./create-initrd.sh` to boot a machine (not a VM) and then drive that with another machine on the same top of rack switch with the memtier_benchmark line below. The output of the benchmark will include a tab delemited histogram which is the input for the fig4.py script.
+
+To reproduce Figure 6 in the paper, the configurations will be as above but the program to be configured with will be memcached. The same memtier invocation can be used by switching the `--protocol=memcached` otherwise the run setup is the same.
 
 Similarly, fio can also be configured.
 
@@ -142,6 +152,13 @@ pushd build-redis
 make -j`nproc`
 popd
 ```
+
+## Building a simple initramfs
+
+If you need a simple initramfs for booting a UKL kernel one can be produced as part of the build
+(ukl-initrd.cpio.xz) or with the `./create-initrd.sh` script. This ramdisk has a very limited environment
+but it does include an ssh sever for retrieving results. If you use this ramdisk the root password is set
+to 'root' so don't leave it exposed to the wider internet.
 
 ## Building your own program
 

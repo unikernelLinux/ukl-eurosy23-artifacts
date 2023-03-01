@@ -182,10 +182,14 @@ stamp-glibc-configure:
 #----------------------------------------------------------------------
 # Build Linux kernel linked with UKL.a
 
-noinst_DATA += vmlinuz
+noinst_DATA += vmlinuz ukl-initrd.cpio.xz
 
 vmlinuz: linux/arch/x86/boot/bzImage
 	cp $< $@
+
+# Note that this dependency is strictly for build ordering
+ukl-initrd.cpio.xz: vmlinuz
+	./create-initrd.sh
 
 linux/arch/x86/boot/bzImage: linux/.config UKL.a
 	mkdir -p linux
