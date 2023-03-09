@@ -25,8 +25,8 @@ Citation for paper:
 		  Jonathan Appavoo and
 		  Orran Krieger},
   year         = "2023",
-  booktitle    = "18th Edition of EuroSys",
-  publisher    = "Association for Computing Machinery, New York, NY, United States"
+  booktitle    = {Proceedings of the Eighteenth European Conference on Computer Systems},
+  publisher    = {Association for Computing Machinery, New York, NY, United States}
 }
 ```
 
