@@ -7,6 +7,29 @@ in kernel space.  You can boot these kernels on baremetal or inside a
 virtual machine.  Almost all features and drivers in Linux are
 available for use by the unikernel.
 
+Citation for paper:
+
+```bib
+@inproceedings{raza2023ukl,
+  title        = "Unikernel Linux (UKL)",
+  author       = {Ali Raza and
+		  Thomas Unger and
+		  Matthew Boyd and
+		  Eric B Munson and
+		  Parul Sohal and
+		  Ulrich Drepper and
+		  Richard Jones and
+		  Daniel Bristot de Oliveira and
+		  Larry Woodman and
+		  Renato Mancuso and
+		  Jonathan Appavoo and
+		  Orran Krieger},
+  year         = "2023",
+  booktitle    = "18th Edition of EuroSys",
+  publisher    = "Association for Computing Machinery, New York, NY, United States"
+}
+```
+
 ## Requirements
 
 * autoconf & automake
