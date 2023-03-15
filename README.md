@@ -7,6 +7,8 @@ in kernel space.  You can boot these kernels on baremetal or inside a
 virtual machine.  Almost all features and drivers in Linux are
 available for use by the unikernel.
 
+For continuing work on UKL see https://github.com/unikernelLinux/ukl
+
 Citation for paper:
 
 ```bib
